@@ -3,7 +3,8 @@
  */
 public class LeapYear {
     /** Returns whether a year is a leap year. A leap year is either:
-     *
+     * 1. divisible by 400 or
+     * 2, divisible by 4 and not by 100.
      * @param year
      * @return
      */
