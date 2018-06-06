@@ -2,7 +2,7 @@
 * @Author: caizhe
 * @Date:   2018-06-04 11:22:49
 * @Last Modified by:   czahie
-* @Last Modified time: 2018-06-04 14:22:42
+* @Last Modified time: 2018-06-06 19:37:54
 */
 
 public class Planet {
@@ -91,6 +91,7 @@ public class Planet {
         return total;
     }
 
+    /** updates the postion and velocity of the planet. */
     public void update(double dt, double fX, double fY) {
         double aX = fX / this.mass;
         double aY = fY / this.mass;
@@ -99,7 +100,11 @@ public class Planet {
         this.xxPos = this.xxPos + this.xxVel * dt;
         this.yyPos = this.yyPos + this.yyVel * dt;
     }
-
+    
+   /** Draws the planet on its postion. */
+   public void draw() {
+        StdDraw.picture(xxPos, yyPos, "images/" + imgFileName);
+   }
 
 
 
