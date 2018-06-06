@@ -2,7 +2,7 @@
 * @Author: czahie
 * @Date:   2018-06-04 22:12:44
 * @Last Modified by:   czahie
-* @Last Modified time: 2018-06-06 20:15:11
+* @Last Modified time: 2018-06-06 22:00:06
 */
 public class NBody {
     /** Reads a file and returns the radius. */
@@ -50,6 +50,7 @@ public class NBody {
         /* Enables double buffering. */
         StdDraw.enableDoubleBuffering();
     
+        /* Creates an Animation. */
         double time = 0;
         while(time < T) {
             double[] xForces = new double[allPlanets.length];
@@ -71,7 +72,15 @@ public class NBody {
             StdDraw.pause(10); 
             time += dt;    
         }
-
+       
+        /* Prints the final state of the universe. */
+        StdOut.printf("%d\n", allPlanets.length);
+        StdOut.printf("%.2e\n", radius);
+        for (int i = 0; i < allPlanets.length; i++) {
+            StdOut.printf("%11.4e %11.4e %11.4e %11.4e %11.4e %12s\n",
+                  allPlanets[i].xxPos, allPlanets[i].yyPos, allPlanets[i].xxVel,
+                  allPlanets[i].yyVel, allPlanets[i].mass, allPlanets[i].imgFileName);   
+        }
 
 
 
