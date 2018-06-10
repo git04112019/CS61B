@@ -2,7 +2,7 @@
 * @Author: czahie
 * @Date:   2018-06-04 22:12:44
 * @Last Modified by:   czahie
-* @Last Modified time: 2018-06-06 22:00:06
+* @Last Modified time: 2018-06-10 22:34:01
 */
 public class NBody {
     /** Reads a file and returns the radius. */
@@ -38,7 +38,7 @@ public class NBody {
         double radius = readRadius(filename);
         Planet[] allPlanets = readPlanets(filename);
 
-        /* Draws the Backgroud. */
+        /* Draws the Background. */
         StdDraw.setScale(-radius, radius);
         StdDraw.picture(0, 0, "images/starfield.jpg");
         
@@ -46,6 +46,10 @@ public class NBody {
         for(Planet P: allPlanets) {
             P.draw();
         }
+
+        /* Plays the audio. */
+        StdAudio.play("audio/2001.mid");
+
 
         /* Enables double buffering. */
         StdDraw.enableDoubleBuffering();
