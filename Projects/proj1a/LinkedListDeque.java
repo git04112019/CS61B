@@ -40,15 +40,40 @@ public class LinkedListDeque<AnyType> {
         size = 1;
     }
 
+    // When insert an item to the front, We need to reassign four pointers:
+    // 1. The old first node's next pointer;
+    // 2. The new first node's prev pointer;
+    // 3. The new first node's next pointer;
+    // 4. The old second node's prev pointer.
     /** Adds an item to the front of the Deque. */
     public void addFirst(AnyType item) {
-        sentinel.next = new Node(item, sentinel, sentinel.next);
+        Node first = new Node(item, sentinel, sentinel.next);
+        sentinel.next.prev = first;
+        if (size == 0) {
+            // If the Deque was empty, then the two pointer should both be reassigned.
+            sentinel.next = new Node(item, sentinel, sentinel.next);
+            sentinel.prev = sentinel.next;
+        }
+        else {
+            // If the Deque was not empty, then only the next pointer should be reassigned.
+            // The prev pointer should always points to the last Node.
+            sentinel.next = new Node(item, sentinel, sentinel.next);
+        }
         size = size + 1;
     }
 
+    // Inserting an item to the back is similar to inserting to the front.
     /** Adds an item to the back of the Deque. */
     public void addLast(AnyType item) {
-        sentinel.prev = new Node(item, sentinel.prev, sentinel);
+        Node last = new Node(item, sentinel.prev, sentinel);
+        sentinel.prev.next = last;
+        if (size == 0) {
+            sentinel.prev = last;
+            sentinel.next = sentinel.prev;
+        }
+        else {
+            sentinel.prev = last;
+        }
         size = size + 1;
     }
 
@@ -110,4 +135,15 @@ public class LinkedListDeque<AnyType> {
         return p.item;
     }
 
+    /** Same as get, but uses recursion. */
+    public AnyType getRecursive(int index) {
+        return getHelper(sentinel.next, index);
+    }
+
+    private AnyType getHelper(Node n, int index) {
+        if (index == 0) {
+            return n.item;
+        }
+        return getHelper(n.next, index - 1);
+    }
 }
