@@ -2,10 +2,16 @@
 * @Author: czahie
 * @Date:   2018-06-15 09:30:55
 * @Last Modified by:   czahie
-* @Last Modified time: 2018-06-15 09:30:55
+* @Last Modified time: 2018-06-15 19:09:27
 */
 
-/** Based on Circular Sentinel. */
+/** Based on Circular Sentinel. 
+* Invariants:
+* 1. The first Node and last Node of the Deque are always the same -- The sentinel.
+* 2. Sentinel.prev always points to the last Node of the Deque.
+* 3. Sentinel.next always points to the first Node of the Deque.
+* 4. The number of items always equals to size.
+*/
 
 public class LinkedListDeque<AnyType> {
     public class Node {
