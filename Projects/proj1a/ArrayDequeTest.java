@@ -65,6 +65,7 @@ public class ArrayDequeTest {
     }
 
     public static void getTest() {
+        System.out.println("Running get test.");
         ArrayDeque<Integer> deque1 = new ArrayDeque<>(5);
         deque1.addLast(10);
         deque1.addLast(20);
@@ -73,14 +74,35 @@ public class ArrayDequeTest {
         int get1 = deque1.get(0);
         int get2 = deque1.get(1);
         int get3 = deque1.get(7);
-        if(get1 == 5 && get2 == 10 && get3 == 1) {
+        if(get1 == 5 && get2 == 10 && get3 == 1 && deque1.get(5) == null) {
             printTestStatus(true);
         }
+    }
+
+    public static void resizeTest() {
+        System.out.println("Running get test.");
+        ArrayDeque<Integer> deque1 = new ArrayDeque<>();
+        int i = 0;
+        while (i < 100) {
+            deque1.addLast(i);
+            i++;
+        }
+        System.out.println(deque1.size());
+        deque1.printDeque();
+        System.out.println();
+        while (i > 10) {
+            deque1.removeLast();
+            i--;
+        }
+        System.out.println(deque1.size());
+        deque1.printDeque();
     }
 
     public static void main(String[] args) {
         //addisEmptySizeTest();
         //addRemoveTest();
-        getTest();
+        //getTest();
+        resizeTest();
+
     }
 }

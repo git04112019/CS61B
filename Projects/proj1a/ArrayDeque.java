@@ -37,6 +37,28 @@ public class ArrayDeque<Item> {
         return i;
     }
 
+    /** Resizes the array. For arrays of length 16 or more, usage factor should always be at least 25%. */
+    private void resize(int capacity) {
+        Item[] newItems = (Item[]) new Object[capacity];
+        int beginning = plusOne(nextFirst);
+        int end = minusOne(nextLast);
+        // When the the beginning of the Deque is actually "behind" the end of it.
+        // Then we need to cut the old array into 2 pieces.
+        if (beginning > end) {
+            int sizeOfFirstHalf = items.length - beginning;
+            int sizeOfSecondHalf = size - sizeOfFirstHalf;
+            System.arraycopy(items, beginning, newItems, 0, sizeOfFirstHalf);
+            System.arraycopy(items, 0, newItems, sizeOfFirstHalf, sizeOfSecondHalf);
+        }
+        else {
+            System.arraycopy(items, beginning, newItems, 0, size);
+        }
+        nextFirst = newItems.length - 1;
+        nextLast = size;
+        items = newItems;
+        System.out.println(items.length);
+    }
+
 
      /** Creates an empty Deque. */
     public ArrayDeque() {
@@ -57,6 +79,9 @@ public class ArrayDeque<Item> {
 
     /** Adds an item to the front of the Deque. */
     public void addFirst(Item x) {
+        if (size == items.length) {
+            resize(size * 2);
+        }
         items[nextFirst] = x;
         nextFirst = minusOne(nextFirst);
         size = size + 1;
@@ -65,6 +90,9 @@ public class ArrayDeque<Item> {
 
     /** Adds an item to the back of the Deque. */
     public void addLast(Item x) {
+        if (size == items.length) {
+            resize(size * 2);
+        }
         items[nextLast] = x;
         nextLast = plusOne(nextLast);
         size = size + 1;
@@ -101,6 +129,9 @@ public class ArrayDeque<Item> {
         if (isEmpty()) {
             return null;
         }
+        if ((float) size / items.length < 0.25 && items.length >= 16) {
+            resize(items.length / 2);
+        }
         int fP = plusOne(nextFirst);
         Item first = items[fP];
         items[fP] = null;
@@ -113,6 +144,9 @@ public class ArrayDeque<Item> {
     public Item removeLast() {
         if (isEmpty()) {
             return null;
+        }
+        if ((float) size / items.length < 0.25 && items.length >= 16) {
+            resize(items.length / 2);
         }
         int lP = minusOne(nextLast);
         Item last = items[lP];
