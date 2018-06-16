@@ -56,7 +56,6 @@ public class ArrayDeque<Item> {
         nextFirst = newItems.length - 1;
         nextLast = size;
         items = newItems;
-        System.out.println(items.length);
     }
 
 
