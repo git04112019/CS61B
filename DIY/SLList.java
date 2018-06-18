@@ -2,7 +2,7 @@
 * @Author: caizhe
 * @Date:   2018-06-05 20:54:07
 * @Last Modified by:   caizhe
-* @Last Modified time: 2018-06-05 21:32:38
+* @Last Modified time: 2018-06-18 10:40:24
 */
 public class SLList {
     private static class IntNode {
@@ -59,10 +59,66 @@ public class SLList {
         return size;
     }
 
+    /** Takes in an integer and inserts it at the given position. */
+    public void insert(int x, int position) {
+        // If the position is after the end of the list, insert the new node at the end. 
+        if (position > size) {
+            addLast(x);
+        }
+        else {
+            IntNode p = sentinel;
+            IntNode n = new IntNode(x, null);
+            while (position > 0) {
+                p = p.next;
+                position = position - 1;
+            }
+            n.next = p.next;
+            p.next = n;
+            size = size + 1;
+        }
+    }
+    
+
+    /** Reverses the elements in the list. */
+    public void reverse() {
+        IntNode frontOfReversed = null;
+        IntNode nextNodeToAdd = sentinel.next;
+        while (nextNodeToAdd != null) {
+            IntNode remainderOfOriginal = nextNodeToAdd.next;
+            nextNodeToAdd.next = frontOfReversed;
+            frontOfReversed = nextNodeToAdd;
+            nextNodeToAdd = remainderOfOriginal;
+        }
+        sentinel.next = frontOfReversed;
+    }
+
+    public void reveseRecursive() {
+        sentinel.next = reveseRecursiveHelper(sentinel.next);
+    }
+
+    private IntNode reveseRecursiveHelper(IntNode front) {
+        if (front == null || front.next == null) {
+            return front;
+        }
+        else {
+            IntNode reversed = reveseRecursiveHelper(front.next);
+            front.next.next = front;
+            front.next = null;
+            return reversed;
+        }
+    }
+
     public static void main(String[] args) {
         /* Creates a list of one integer, namely 10 */
         SLList L = new SLList();
         L.addLast(20);
+        L.addLast(40);
+        L.addLast(80);
+        L.insert(30, 0);
+        L.insert(100, 5);
         System.out.println(L.size());
+        System.out.println(L.getFirst());
+        L.reveseRecursive();
+        System.out.println(L.getFirst()); 
     }
 }
