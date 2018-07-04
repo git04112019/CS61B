@@ -17,4 +17,20 @@ public class TestPalindrome {
         assertEquals("persiflage", actual);
     }
     //Uncomment this class once you've created your Palindrome class. */
+
+    @Test
+    public void testIsPalindrome() {
+        assertTrue(palindrome.isPalindrome("A"));
+        assertTrue(palindrome.isPalindrome(""));
+        assertFalse(palindrome.isPalindrome("aA"));
+        assertTrue(palindrome.isPalindrome("racecar"));
+    }
+
+    @Test
+    public void testIsPalinDromeRecursive() {
+        assertTrue(palindrome.isPalindromeRecursive("A"));
+        assertTrue(palindrome.isPalindromeRecursive(""));
+        assertFalse(palindrome.isPalindromeRecursive("aA"));
+        assertTrue(palindrome.isPalindromeRecursive("racecar"));
+    }
 }
