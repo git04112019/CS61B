@@ -27,10 +27,22 @@ public class TestPalindrome {
     }
 
     @Test
-    public void testIsPalinDromeRecursive() {
+    public void testIsPalindromeRecursive() {
         assertTrue(palindrome.isPalindromeRecursive("A"));
         assertTrue(palindrome.isPalindromeRecursive(""));
         assertFalse(palindrome.isPalindromeRecursive("aA"));
         assertTrue(palindrome.isPalindromeRecursive("racecar"));
     }
+
+    @Test
+    public void testIsPalindrome2() {
+        OffByOne offByOne = new OffByOne();
+        assertTrue(palindrome.isPalindrome("flake", offByOne));
+        assertTrue(palindrome.isPalindrome("flke", offByOne));
+        assertTrue(palindrome.isPalindrome("a", offByOne));
+        assertFalse(palindrome.isPalindrome("racecar", offByOne));
+        assertFalse(palindrome.isPalindrome("aA", offByOne));
+        assertTrue(palindrome.isPalindrome("ab", offByOne));
+    }
+
 }
