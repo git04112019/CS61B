@@ -13,6 +13,11 @@ import java.util.Random;
  * Draws a world consisting of hexagonal regions.
  */
 public class HexWorld {
+    private static final int WIDTH = 50;
+    private static final int HEIGHT = 50;
+
+    private static final long SEED = 2873123;
+    private static final Random RANDOM = new Random(SEED);
 
     private static class Position{
         int x;
@@ -38,7 +43,7 @@ public class HexWorld {
 
 
     /** Returns the ith hexRowXOffSet given the size of hexagon and i(start from 0).
-     *  Assumes that the first row starts from zero. */
+     *  Assumes that the first(bottom) row starts from zero. */
     private static int hexRowOffset(int size, int i) {
         int offSet = 0;
         if (i < size) {
@@ -89,6 +94,58 @@ public class HexWorld {
         }
     }
 
+    /** Draws a column of N hexes, each one with a random biome.
+     * @param world the world to draw on
+     * @param p the bottom left coordinate of the first hexagon
+     * @param n the number of hexes in this column
+     * @param s the size of these hexes
+     */
+    public static void drawRandomVerticalHexes(TETile[][] world, Position p, int n, int s) {
+        Position nextPos = p;
+        for (int i = 0; i < n; i++) {
+            addHexagon(world, nextPos, s, randomTetile());
+            // Actually Position p never changed.
+            nextPos = new Position(nextPos.x, nextPos.y + 2 * s);
+        }
+
+    }
+
+    private static TETile randomTetile() {
+        int tileNum = RANDOM.nextInt(3);
+        switch (tileNum) {
+            case 0: return Tileset.WALL;
+            case 1: return Tileset.FLOWER;
+            case 2: return Tileset.MOUNTAIN;
+            case 3: return Tileset.GRASS;
+            case 4: return Tileset.WATER;
+            case 5: return Tileset.FLOOR;
+            case 6: return Tileset.SAND;
+            case 7: return Tileset.TREE;
+            case 8: return Tileset.LOCKED_DOOR;
+            case 9: return Tileset.UNLOCKED_DOOR;
+            default: return Tileset.FLOWER;
+        }
+    }
+
+    /** Draws all the columns
+     * @param world the world to draw on
+     * @param p the bottom left coordinate of the first hexagon
+     * @param s the size of these hexes
+     */
+    public static void drawColsOfHexes(TETile[][] world, Position p, int s) {
+        Position nextPos = p;
+        drawRandomVerticalHexes(world, nextPos, 3, 3);
+        nextPos = new Position(nextPos.x + 2 * s - 1, nextPos.y - s);
+        drawRandomVerticalHexes(world, nextPos, 4, 3);
+        nextPos = new Position(nextPos.x + 2 * s - 1, nextPos.y - s);
+        drawRandomVerticalHexes(world, nextPos, 5, 3);
+        nextPos = new Position(nextPos.x + 2 * s - 1, nextPos.y + s);
+        drawRandomVerticalHexes(world, nextPos, 4, 3);
+        nextPos = new Position(nextPos.x + 2 * s - 1, nextPos.y + s);
+        drawRandomVerticalHexes(world, nextPos, 3, 3);
+        }
+
+
     @Test
     public void testHexRowWidth() {
         assertEquals(3, hexRowWidth(3, 5));
@@ -118,9 +175,6 @@ public class HexWorld {
     }
 
     public static void main(String[] args) {
-        final int WIDTH = 30;
-        final int HEIGHT = 30;
-
         TERenderer ter = new TERenderer();
         ter.initialize(WIDTH, HEIGHT);
 
@@ -130,9 +184,13 @@ public class HexWorld {
                 world[x][y] = Tileset.NOTHING;
             }
         }
+//
+//        Position testPos = new Position(5, 13);
+//        addHexagon(world, testPos,3, Tileset.FLOWER);
 
-        Position testPos = new Position(10, 10);
-        addHexagon(world, testPos,3, Tileset.FLOWER);
+        Position testPos2 = new Position(20, 20);
+        //drawRandomVerticalHexes(world, testPos2, 3, 3);
+        drawColsOfHexes(world, testPos2, 3);
 
         ter.renderFrame(world);
     }
