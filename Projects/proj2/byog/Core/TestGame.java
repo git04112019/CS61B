@@ -22,9 +22,14 @@ public class TestGame {
 
         Random r = new Random(2017);
         Game.Position p = new Game.Position(10, 10);
-        for (int i = 0; i < 80; i++) {
+        for (int i = 0; i < 400; i++) {
             Game.drawRoom(world, p, r);
         }
+
+        for (int i = 0; i < 150; i++)
+            Game.drawHallway(world, r);
+
+        Game.removeWall(world);
 
         ter.renderFrame(world);
     }

@@ -4,6 +4,8 @@ import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 import byog.lab5.HexWorld;
+import edu.princeton.cs.algs4.RunLength;
+import javafx.geometry.Pos;
 
 import java.util.Random;
 
@@ -138,6 +140,239 @@ public class Game {
             }
         }
         return flag;
+    }
+
+    /**
+     * Draws hallways in the world
+     */
+    public static void drawHallway(TETile[][] world, Random RANDOM) {
+        Position p = new Position(RANDOM.nextInt(WIDTH), RANDOM.nextInt(HEIGHT));
+
+        while (!(world[p.x][p.y].equals(Tileset.WALL)) || p.x < 3 || p.y < 3 || p.x > WIDTH - 3 || p.y > HEIGHT - 3) {
+            p.x = RANDOM.nextInt(WIDTH - 1);
+            p.y = RANDOM.nextInt(HEIGHT - 1);
+
+            // Hallways cannot be on the side.
+            if(p.x < 3 || p.y < 3 || p.x > WIDTH - 3 || p.y > HEIGHT - 3) {
+                continue;
+            }
+
+            // Some walls on the corner and so on.
+            if (!checkHallway(world, p)) {
+                continue;
+            }
+        }
+
+        int dir = setDirectionOfHallway(world, p);
+
+        int count = 0;
+
+        switch (dir) {
+            case 1:
+                while (p.y < HEIGHT - 2 && !checkConnected(world, p, 1)) {
+                    world[p.x - 1][p.y] = Tileset.WALL;
+                    world[p.x + 1][p.y] = Tileset.WALL;
+                    world[p.x][p.y] = Tileset.FLOOR;
+                    p.y += 1;
+                    count++;
+                    if (count >= 15) {
+                        break;
+                    }
+                }
+                world[p.x][p.y] = Tileset.WALL;
+                world[p.x - 1][p.y] = Tileset.WALL;
+                world[p.x + 1][p.y] = Tileset.WALL;
+                break;
+            case 2:
+                while (p.x < WIDTH - 2 && !checkConnected(world, p, 2)) {
+                    world[p.x][p.y + 1] = Tileset.WALL;
+                    world[p.x][p.y - 1] = Tileset.WALL;
+                    world[p.x][p.y] = Tileset.FLOOR;
+                    p.x += 1;
+                    count++;
+                    if (count >= 15) {
+                        break;
+                    }
+                }
+                world[p.x][p.y] = Tileset.WALL;
+                world[p.x][p.y + 1] = Tileset.WALL;
+                world[p.x][p.y - 1] = Tileset.WALL;
+                break;
+            case 3:
+                while (p.y > 1 && !checkConnected(world, p, 3)) {
+                    world[p.x + 1][p.y] = Tileset.WALL;
+                    world[p.x - 1][p.y] = Tileset.WALL;
+                    world[p.x][p.y] = Tileset.FLOOR;
+                    p.y -= 1;
+                    count++;
+                    if (count >= 15) {
+                        break;
+                    }
+
+                }
+                world[p.x][p.y] = Tileset.WALL;
+                world[p.x - 1][p.y] = Tileset.WALL;
+                world[p.x + 1][p.y] = Tileset.WALL;
+                break;
+            case 4:
+                while (p.x > 1 && !checkConnected(world, p, 4)) {
+                    world[p.x][p.y + 1] = Tileset.WALL;
+                    world[p.x][p.y - 1] = Tileset.WALL;
+                    world[p.x][p.y] = Tileset.FLOOR;
+                    p.x -= 1;
+                    count++;
+                    if (count >= 15) {
+                        break;
+                    }
+                }
+                world[p.x][p.y] = Tileset.WALL;
+                world[p.x][p.y + 1] = Tileset.WALL;
+                world[p.x][p.y - 1] = Tileset.WALL;
+                break;
+        }
+    }
+
+    /**
+     * Checks whether Position p is capable to construct a hallway. */
+    private static boolean checkHallway(TETile[][] world, Position p) {
+        // There must be at least one floor in four directions to construct one hallway.
+        if (world[p.x + 1][p.y].equals(Tileset.FLOOR) || world[p.x - 1][p.y].equals(Tileset.FLOOR) ||
+                world[p.x][p.y + 1].equals(Tileset.FLOOR) || world[p.x][p.y - 1].equals(Tileset.FLOOR)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * Sets the direction of the hallway.
+     * 1 means up
+     * 2 means right
+     * 3 means down
+     * 4 means left
+     * */
+    private static int setDirectionOfHallway(TETile[][] world, Position p) {
+        int dir = 0;
+        if (world[p.x][p.y - 1].equals(Tileset.FLOOR)) {
+            dir = 1;
+        }
+        if (world[p.x - 1][p.y].equals(Tileset.FLOOR)) {
+            dir = 2;
+        }
+        if (world[p.x][p.y + 1].equals(Tileset.FLOOR)) {
+            dir = 3;
+        }
+        if (world[p.x + 1][p.y].equals(Tileset.FLOOR)) {
+            dir = 4;
+        }
+        return dir;
+    }
+
+    /**
+     * Checks if the hallway has connected two rooms or not.
+     */
+    private static boolean checkConnected(TETile[][] world, Position p, int dir) {
+        boolean connected = false;
+
+        switch (dir) {
+            case 1:
+                if (world[p.x - 1][p.y].equals(Tileset.FLOOR) || world[p.x + 1][p.y].equals(Tileset.FLOOR) ||
+                        world[p.x][p.y + 1].equals(Tileset.FLOOR)) {
+                    connected = true;
+                }
+                break;
+            case 2:
+                if (world[p.x][p.y + 1].equals(Tileset.FLOOR) || world[p.x][p.y - 1].equals(Tileset.FLOOR) ||
+                        world[p.x + 1][p.y].equals(Tileset.FLOOR)) {
+
+                    connected = true;
+                }
+                break;
+            case 3:
+                if (world[p.x - 1][p.y].equals(Tileset.FLOOR) || world[p.x + 1][p.y].equals(Tileset.FLOOR) ||
+                        world[p.x][p.y - 1].equals(Tileset.FLOOR)) {
+                    connected = true;
+                }
+                break;
+            case 4:
+                if (world[p.x][p.y + 1].equals(Tileset.FLOOR) || world[p.x][p.y - 1].equals(Tileset.FLOOR) ||
+                        world[p.x - 1][p.y].equals(Tileset.FLOOR)) {
+                    connected = true;
+                }
+        }
+
+        return connected;
+    }
+
+    public static void removeWall(TETile[][] world) {
+        Position[] pShouldBeRemoved = new Position[500];
+        int index = 0;
+
+        for (int i = 1; i < WIDTH - 1; i++) {
+            for (int j = 1; j < HEIGHT - 1; j++) {
+                Position p = new Position(i,j);
+                Position rightOfP = new Position(p.x + 1, p.y);
+                Position lowerOfP = new Position(p.x, p.y - 1);
+                Position leftOfP = new Position(p.x - 1, p.y);
+                Position upperOfP = new Position(p.x, p.y + 1);
+                if (wallShouldBeRemoved(world, p)) {
+                    if ((wallShouldBeRemoved(world, upperOfP) && wallShouldBeRemoved(world, lowerOfP)) ||
+                            (wallShouldBeRemoved(world, leftOfP) && wallShouldBeRemoved(world, rightOfP))) {
+                        continue;
+                    }
+                    if ((isPeninsulaWall(world, upperOfP)) || isPeninsulaWall(world, rightOfP) ||
+                            isPeninsulaWall(world, lowerOfP) || isPeninsulaWall(world, leftOfP)) {
+                        continue;
+                    }
+//                    world[p.x][p.y] = Tileset.FLOOR;
+
+                    pShouldBeRemoved[index] = p;
+                    index++;
+
+                }
+            }
+        }
+
+        for (int i = 0; i < index; i++) {
+            Position p = pShouldBeRemoved[i];
+            world[p.x][p.y] = Tileset.FLOOR;
+        }
+    }
+
+    public static boolean wallShouldBeRemoved(TETile[][] world, Position p) {
+        if ((world[p.x + 1][p.y].equals(Tileset.FLOOR) && world[p.x - 1][p.y].equals(Tileset.FLOOR) &&
+                world[p.x][p.y + 1].equals(Tileset.WALL) && world[p.x][p.y - 1].equals(Tileset.WALL)) ||
+                (world[p.x][p.y + 1].equals(Tileset.FLOOR) && world[p.x][p.y - 1].equals(Tileset.FLOOR) &&
+                world[p.x + 1][p.y].equals(Tileset.WALL) && world[p.x - 1][p.y].equals(Tileset.WALL))) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public static boolean isPeninsulaWall(TETile[][] world, Position p) {
+        if (!world[p.x][p.y].equals(Tileset.FLOOR)) {
+            return false;
+        }
+        int count = 0;
+        if (world[p.x][p.y + 1].equals(Tileset.FLOOR)) {
+            count += 1;
+        }
+        if (world[p.x][p.y - 1].equals(Tileset.FLOOR)) {
+            count += 1;
+        }
+        if (world[p.x + 1][p.y].equals(Tileset.FLOOR)) {
+            count += 1;
+        }
+        if (world[p.x - 1][p.y].equals(Tileset.FLOOR)) {
+            count += 1;
+        }
+        if (count == 3) {
+            return true;
+        }
+        return false;
     }
 
 //    public static void main(String[] args) {
