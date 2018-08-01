@@ -60,8 +60,24 @@ public class Game {
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
 
+        long seed;
+
+        if (input.toLowerCase().contains("n") && input.toLowerCase().contains("s")) {
+            int start = input.toLowerCase().indexOf("n") + 1;
+            int end = input.toLowerCase().indexOf("s");
+            try {
+                seed = Long.parseLong(input.substring(start, end));
+            } catch(Exception e) {
+                throw new RuntimeException("Seed has to be an integer but you input: \"" + input.substring(start, end) + "\"");
+            }
+        }
+
         TETile[][] finalWorldFrame = null;
         return finalWorldFrame;
+    }
+
+    public static void drawMenu() {
+
     }
 
     /**
@@ -309,8 +325,8 @@ public class Game {
         Position[] pShouldBeRemoved = new Position[500];
         int index = 0;
 
-        for (int i = 1; i < WIDTH - 1; i++) {
-            for (int j = 1; j < HEIGHT - 1; j++) {
+        for (int i = 2; i < WIDTH - 2; i++) {
+            for (int j = 2; j < HEIGHT - 2; j++) {
                 Position p = new Position(i,j);
                 Position rightOfP = new Position(p.x + 1, p.y);
                 Position lowerOfP = new Position(p.x, p.y - 1);
