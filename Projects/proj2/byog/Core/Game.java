@@ -391,6 +391,37 @@ public class Game {
         return false;
     }
 
+    public static void drawLockedDoor(TETile[][] world, Random Random) {
+        Position p = new Position(Random.nextInt(WIDTH - 1), Random.nextInt(HEIGHT - 1));
+        boolean flag = false;
+
+        //check if Position p can be set as a locked door
+        while (!flag) {
+            if (p.x - 1 < 0 || p.y - 1 < 0) {
+                continue;
+            }
+            int numOfFloor = 0, numOfWall = 0, numOfBlank = 0;
+            for (int i = p.x - 1; i <= p.x + 1; i++) {
+                for (int j = p.y - 1; j <= p.y + 1; j++) {
+                    if (world[i][j].equals(Tileset.FLOOR)){
+                        numOfFloor += 1;
+                    }
+                    if (world[i][j].equals(Tileset.WALL)) {
+                        numOfWall += 1;
+                    }
+                    numOfBlank += 1;
+                }
+            }
+            if ((numOfFloor == 1 && numOfWall == 5) || (numOfFloor == 2 && numOfWall == 4) || (numOfFloor == 3 && numOfWall == 3)) {
+                flag = true;
+                world[p.x][p.y] = Tileset.LOCKED_DOOR;
+            }
+            else {
+                p = new Position(Random.nextInt(WIDTH - 1), Random.nextInt(HEIGHT - 1));
+            }
+        }
+
+    }
 //    public static void main(String[] args) {
 //        TERenderer ter = new TERenderer();
 //        ter.initialize(WIDTH, HEIGHT);

@@ -20,7 +20,7 @@ public class TestGame {
             }
         }
 
-        Random r = new Random(20180710);
+        Random r = new Random(2018071);
         Game.Position p = new Game.Position(10, 10);
         for (int i = 0; i < 400; i++) {
             Game.drawRoom(world, p, r);
@@ -30,6 +30,8 @@ public class TestGame {
             Game.drawHallway(world, r);
 
         Game.removeWall(world);
+
+        Game.drawLockedDoor(world, r);
 
         ter.renderFrame(world);
     }
