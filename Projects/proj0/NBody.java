@@ -2,7 +2,7 @@
 * @Author: czahie
 * @Date:   2018-06-04 22:12:44
 * @Last Modified by:   czahie
-* @Last Modified time: 2018-06-10 22:34:01
+* @Last Modified time: 2018-06-10 22:36:36
 */
 public class NBody {
     /** Reads a file and returns the radius. */

@@ -321,6 +321,10 @@ public class Game {
         return connected;
     }
 
+    /**
+     * Remove walls between halls and rooms
+     * @param world the world to draw on
+     */
     public static void removeWall(TETile[][] world) {
         Position[] pShouldBeRemoved = new Position[500];
         int index = 0;
@@ -391,6 +395,10 @@ public class Game {
         return false;
     }
 
+    /**
+     * Draw a locked door in the wall
+     * @param Random pseudorandom function
+     */
     public static void drawLockedDoor(TETile[][] world, Random Random) {
         Position p = new Position(Random.nextInt(WIDTH - 1), Random.nextInt(HEIGHT - 1));
         boolean flag = false;
