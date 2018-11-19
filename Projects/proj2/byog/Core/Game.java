@@ -29,13 +29,13 @@ public class Game {
         }
     }
 
-//    /**
-//     * Gets a Random according to the seed that player sets.
-//     * */
-//    private static Random getRandom(long seed) {
-//        Random RANDOM = new Random(seed);
-//        return RANDOM;
-//    }
+    /**
+     * Gets a Random according to the seed that player sets.
+      * */
+    private static Random getRandom(long seed) {
+        Random RANDOM = new Random(seed);
+        return RANDOM;
+    }
 
     /**
      * Method used for playing a fresh game. The game should start from the main menu.
@@ -60,6 +60,7 @@ public class Game {
         // and return a 2D tile representation of the world that would have been
         // drawn if the same inputs had been given to playWithKeyboard().
 
+
         long seed;
 
         if (input.toLowerCase().contains("n") && input.toLowerCase().contains("s")) {
@@ -70,9 +71,39 @@ public class Game {
             } catch(Exception e) {
                 throw new RuntimeException("Seed has to be an integer but you input: \"" + input.substring(start, end) + "\"");
             }
+        } else {
+            throw new RuntimeException("You must put a string start with 'n' and end with 's'.");
         }
 
-        TETile[][] finalWorldFrame = null;
+        ter.initialize(WIDTH, HEIGHT);
+        TETile[][] finalWorldFrame = new TETile[WIDTH][HEIGHT];
+
+        Random RANDOM = getRandom(seed);
+
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                finalWorldFrame[i][j] = Tileset.NOTHING;
+            }
+        }
+
+        Position p = new Position(RANDOM.nextInt(), RANDOM.nextInt());
+
+        // Draw rooms
+        for (int i = 0; i< 400; i++) {
+            drawRoom(finalWorldFrame, p, RANDOM);
+        }
+
+        // Draw hallways
+        for (int i = 0; i < 150; i++) {
+            drawHallway(finalWorldFrame, RANDOM);
+        }
+
+        removeWall(finalWorldFrame);
+
+        drawLockedDoor(finalWorldFrame, RANDOM);
+
+        ter.renderFrame(finalWorldFrame);
+
         return finalWorldFrame;
     }
 
@@ -430,6 +461,7 @@ public class Game {
         }
 
     }
+
 //    public static void main(String[] args) {
 //        TERenderer ter = new TERenderer();
 //        ter.initialize(WIDTH, HEIGHT);
